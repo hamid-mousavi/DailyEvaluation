@@ -4,6 +4,7 @@ import 'package:daily_ev/features/daily_evaluation/presentation/Views/add_evalut
 import 'package:daily_ev/features/daily_evaluation/presentation/Views/daily_evaluation_view.dart';
 import 'package:daily_ev/features/daily_evaluation/presentation/Views/edit_evalation_view.dart';
 import 'package:daily_ev/features/daily_evaluation/presentation/blocs/bloc/daily_evaluation_bloc.dart';
+import 'package:daily_ev/features/daily_evaluation/presentation/blocs/bloc/daily_evaluation_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -26,25 +27,25 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    return MaterialApp(
-      title: 'Daily Evaluation',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: BlocProvider(
-        create: (context) => DailyEvaluationBloc(
-           HiveDailyEvaluationService(evaluationBox),
+    return BlocProvider(
+      create: (context) => DailyEvaluationBloc(
+        HiveDailyEvaluationService(evaluationBox),
+      )..add(LoadEvaluationsEvent()),
+      child: MaterialApp(
+        title: 'Daily Evaluation',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
-        child: DailyEvaluationView(),
+        home: DailyEvaluationView(),
+        // اضافه کردن مسیرها
+        routes: {
+          '/addDailyEvaluation': (context) => const AddEvaluationPage(),
+          '/editEvaluation': (context) => EditEvaluationPage(
+                evaluation: args?['evaluation'],
+                index: args?['index'],
+              )
+        },
       ),
-      // اضافه کردن مسیرها
-      routes: {
-        '/addDailyEvaluation': (context) => const AddEvaluationPage(),
-        '/editEvaluation': (context) => EditEvaluationPage(
-              evaluation: args?['evaluation'],
-              index: args?['index'],
-            )
-      },
     );
   }
 }

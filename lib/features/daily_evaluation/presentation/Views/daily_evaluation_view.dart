@@ -65,12 +65,17 @@ class DailyEvaluationView extends StatelessWidget {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // می‌توانید یک فرم جدید برای اضافه کردن ارزیابی روزانه باز کنید.
-          Navigator.pushNamed(context, '/addDailyEvaluation');
+      floatingActionButton:
+          BlocBuilder<DailyEvaluationBloc, DailyEvaluationState>(
+        builder: (context, state) {
+          return FloatingActionButton(
+            onPressed: () {
+              // می‌توانید یک فرم جدید برای اضافه کردن ارزیابی روزانه باز کنید.
+              Navigator.pushNamed(context, '/addDailyEvaluation');
+            },
+            child: const Icon(Icons.add),
+          );
         },
-        child: const Icon(Icons.add),
       ),
     );
   }

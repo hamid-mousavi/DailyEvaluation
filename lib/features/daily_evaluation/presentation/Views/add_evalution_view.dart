@@ -1,7 +1,6 @@
 import 'package:daily_ev/features/daily_evaluation/Data/models/daily_evaluation.dart';
 import 'package:daily_ev/features/daily_evaluation/presentation/blocs/bloc/daily_evaluation_bloc.dart';
 import 'package:daily_ev/features/daily_evaluation/presentation/blocs/bloc/daily_evaluation_event.dart';
-import 'package:daily_ev/features/daily_evaluation/presentation/blocs/bloc/daily_evaluation_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,27 +26,27 @@ class _AddEvaluationPageState extends State<AddEvaluationPage> {
   }
 
   // متد برای ذخیره کردن ارزیابی جدید
-void _submitEvaluation() {
-  if (_formKey.currentState?.validate() ?? false) {
-    _formKey.currentState?.save();
+  void _submitEvaluation() {
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
 
-    // ارسال رویداد اضافه کردن ارزیابی به BLoC
-    context.read<DailyEvaluationBloc>().add(
-      AddEvaluationEvent(
-        DailyEvaluation(
-          date: _selectedDate,
-          spiritualScore: _spiritualScore,
-          physicalScore: _physicalScore,
-          mentalScore: _mentalScore,
-          notes: _notes,
+      // ارسال رویداد اضافه کردن ارزیابی به BLoC
+      BlocProvider.of<DailyEvaluationBloc>(context).add(
+        AddEvaluationEvent(
+          DailyEvaluation(
+            date: _selectedDate,
+            spiritualScore: _spiritualScore,
+            physicalScore: _physicalScore,
+            mentalScore: _mentalScore,
+            notes: _notes,
+          ),
         ),
-      ),
-    );
+      );
 
-    // بازگشت به صفحه اصلی پس از ارسال ارزیابی
-    Navigator.pop(context);
+      // بازگشت به صفحه اصلی پس از ارسال ارزیابی
+      Navigator.pop(context);
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +90,9 @@ void _submitEvaluation() {
                   if (value == null || value.isEmpty) {
                     return 'Please enter spiritual score';
                   }
+                  if (int.tryParse(value) == null) {
+                    return 'Please enter a valid number';
+                  }
                   return null;
                 },
                 onSaved: (value) {
@@ -107,6 +109,9 @@ void _submitEvaluation() {
                   if (value == null || value.isEmpty) {
                     return 'Please enter physical score';
                   }
+                  if (int.tryParse(value) == null) {
+                    return 'Please enter a valid number';
+                  }
                   return null;
                 },
                 onSaved: (value) {
@@ -122,6 +127,9 @@ void _submitEvaluation() {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter mental score';
+                  }
+                  if (int.tryParse(value) == null) {
+                    return 'Please enter a valid number';
                   }
                   return null;
                 },
